@@ -29,7 +29,7 @@ def new_alert():
 
 # when a user accesses this endpoint, flask will take the string from the url -the alert id- and give it to us
 @alert_blueprint.route('/edit/<string:alert_id>', methods=['GET', 'POST'])
-def edit_alert(alert_id)
+def edit_alert(alert_id):
     # go into database, retrieve alert with this id
     alert = Alert.get_by_id(alert_id)
 
