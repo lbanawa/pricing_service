@@ -23,6 +23,17 @@ class User(Model):
             raise UserErrors.UserNotFoundError('A user with this e-mail was not found.')
 
     @classmethod
+    def is_login_valid(cls, email: str, password: str) -> bool:
+        # check if user exists -- if so, continue
+        user = cls.find_by_email(email)
+
+        # check if the encrypted/ hashed passwords match -- if not, give message that password was incorrect
+        if not Utils.check_hashed_password(password, user.password):
+            raise UserErrors.IncorrectPasswordError('Your password was incorrect.')
+
+        return True
+
+    @classmethod
     def register_user(cls, email: str, password: str) -> bool:
         # check that email is in correct format -- return invalid email error if not
         if not Utils.email_is_valid(email):
