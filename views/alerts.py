@@ -7,8 +7,7 @@ alert_blueprint = Blueprint('alerts', __name__)
 
 @alert_blueprint.route('/')
 def index():
-    print(session['email'])
-    alerts = Alert.all()
+    alerts = Alert.find_many_by('user_email', session['email'])
     return render_template('alerts/index.html', alerts=alerts)
 
 
@@ -24,7 +23,7 @@ def new_alert():
         item.load_price() # get the price from the page, store it in self.price
         item.save_to_mongo()
 
-        Alert(alert_name, item._id, price_limit).save_to_mongo()
+        Alert(alert_name, item._id, price_limit, session['email']).save_to_mongo()
 
     return render_template('alerts/new_alert.html')
 
@@ -48,5 +47,7 @@ def edit_alert(alert_id):
 # get the alert id and remove the alert with that id from the database
 @alert_blueprint.route('/delete/<string:alert_id>')
 def delete_alert(alert_id):
-    Alert.get_by_id(alert_id).remove_from_mongo()
+    alert = Alert.get_by_id(alert_id)
+    if alert.user_email == session['email']:
+        alert.remove_from_mongo()
     return redirect(url_for('.index'))
