@@ -3,3 +3,4 @@ beautifulsoup4 == 4.8.2
 requests == 2.23.0
 pymongo == 3.9.0
 passlib == 1.7.2
+python-dotenv == 0.12.0
